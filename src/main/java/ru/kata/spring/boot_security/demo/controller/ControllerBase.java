@@ -52,14 +52,14 @@ public class ControllerBase {
     }
 
     @PostMapping("/")
-    String add(@ModelAttribute("user") User user, @RequestParam("role") String[] role) {
+    String add(@ModelAttribute("user") User user, @RequestParam(value = "role",defaultValue = "ROLE_USER") String[] role) {
         user.setRoles(roleService.getStringArrayToSetRole(role));
         userService.saveUser(user);
         return "redirect:/admin";
     }
 
     @PatchMapping("/{id}")
-    String edit(@ModelAttribute("user") User user, @RequestParam("role") String[] role) {
+    String edit(@ModelAttribute("user") User user, @RequestParam(value = "role",defaultValue = "ROLE_USER") String[] role) {
         user.setRoles(roleService.getStringArrayToSetRole(role));
         userService.update(user);
         return "redirect:/admin";
