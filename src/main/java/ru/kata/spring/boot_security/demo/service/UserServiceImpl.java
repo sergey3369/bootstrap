@@ -7,21 +7,24 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDao;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.security.MyUserPrincipal;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    private final RoleService roleService;
     private final UserDao dao;
 
-    public UserServiceImpl(UserDao dao) {
+    public UserServiceImpl(RoleService roleService, UserDao dao) {
+        this.roleService = roleService;
         this.dao = dao;
     }
 
-    @Transactional
     @Override
     public List<User> getUsers() {
         return dao.getUsers();
@@ -33,7 +36,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         dao.saveUser(user);
     }
 
-    @Transactional
     @Override
     public User getUser(int id) {
         return dao.getUser(id);
@@ -49,7 +51,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public void update(User user) { dao.update(user); }
 
-    @Transactional
     @Override
     public User findByUsername(String username) {
         return dao.findByUsername(username);
@@ -57,7 +58,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = dao.findByUsername(username);
-        return new MyUserPrincipal(user);
+        return dao.findByUsername(username);
+    }
+    @Override
+    public Set<Role> getSetOfRoles(List<String> rolesId){
+        Set<Role> roleSet = new HashSet<>();
+        for (String id: rolesId) {
+            roleSet.add(roleService.getRoleById(Integer.parseInt(id)));
+        }
+        return roleSet;
     }
 }
