@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.roleService = roleService;
     }
 
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = findUserByName(email);
@@ -61,6 +62,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userDao.findUser(id);
     }
 
+    @Transactional
     @Override
     public User findUserByName(String name) {
         return userDao.findUserByName(name);
