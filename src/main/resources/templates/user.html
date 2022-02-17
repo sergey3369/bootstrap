@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>User</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -20,7 +20,7 @@
             </p></h3>
         </div>
         <div th:fragment="logout" class="col-1">
-            <a style="color: #cccccc" href="/logout">Logout</a>
+            <a style="text-align:center;color: #cccccc" class="nav-item nav-link pull-xs-right m-l-2 font-weight" href="/logout">Logout</a>
         </div>
     </div>
 </div>
@@ -30,7 +30,7 @@
         <div class="col-sm-2 p-0 mt-2">
             <ul class="nav nav-pills flex-column">
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/" sec:authorize="hasAuthority('ADMIN')">Admin</a>
+                    <a class="nav-link" href="/admin" sec:authorize="hasAuthority('ADMIN')">Admin</a>
                 </li>
                 <li class="nav-item">
                     <a href="/user" class="btn btn-primary btn-lg btn-block text-left" role="button">User</a>

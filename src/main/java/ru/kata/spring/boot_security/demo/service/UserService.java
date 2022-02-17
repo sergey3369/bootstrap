@@ -7,17 +7,11 @@ import java.util.List;
 import java.util.Set;
 
 public interface UserService {
-    List<User> getUsers();
-
     void saveUser(User user);
-
-    User getUser(int id);
-
-    void deleteUser(Integer id);
-
-    void update( User user);
-
-    User findByUsername(String username);
-
-    Set<Role> getSetOfRoles(List<String> rolesId);
+    User findUser(Long id);
+    List<User> listUsers();
+    User findUserByName(String email);
+    Set<Role> getSetOfRoles(List<String> id);
+    void deleteUser(Long id);
+    void updateUser(User user);
 }

@@ -1,56 +1,61 @@
 package ru.kata.spring.boot_security.demo.dao;
 
-
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.User;
-import javax.persistence.*;
+
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
-
-    @PersistenceContext
     private EntityManager entityManager;
 
-    @Override
-    public List<User> getUsers() {
-        Query query = entityManager.
-                createQuery("SELECT e FROM User e");
-        List<User> list = query.getResultList();
-        return list;
+    @Autowired
+    public void setEntityManager(EntityManager entityManager) {
+        this.entityManager = entityManager;
     }
+
+    private Session session;
 
     @Override
     public void saveUser(User user) {
-        entityManager.persist(user);
+        session = entityManager.unwrap(Session.class);
+        session.save(user);
     }
 
     @Override
-    public User getUser(int id) {
-        Query query = entityManager.
-                createQuery("select u from User u where u.id = :id");
-        query.setParameter("id", (long) id);
-        return (User) query.getSingleResult();
-    }
-
-    @Override
-    public void deleteUser(Integer id) {
-        Query query = entityManager.
-                createQuery("delete from User u where u.id = :id");
-        query.setParameter("id", (long) id);
-        query.executeUpdate();
-    }
-
-    @Override
-    public void update(User user) {
+    public void updateUser(User user) {
         entityManager.merge(user);
     }
 
     @Override
-    public User findByUsername(String username) {
-        Query query = entityManager.
-                createQuery("select u from User u where u.surname = :username");
-        query.setParameter("username", username);
-        return (User) query.getSingleResult();
+    public User findUser(Long id) {
+        session = entityManager.unwrap(Session.class);
+        return session.find(User.class, id);
+    }
+
+    @Override
+    public User findUserByName(String email) {
+        session = entityManager.unwrap(Session.class);
+        TypedQuery<User> query = session.createQuery("FROM User u where u.email = :email");
+        query.setParameter("email", email);
+        return query.getSingleResult();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<User> listUsers() {
+        session = entityManager.unwrap(Session.class);
+        return (List<User>) session.createQuery("SELECT u FROM User u").getResultList();
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        session = entityManager.unwrap(Session.class);
+        User user = session.find(User.class, id);
+        session.remove(user);
     }
 }

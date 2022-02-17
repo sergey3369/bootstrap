@@ -1,41 +1,69 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+
 import javax.persistence.*;
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
 
 @Entity
 @Table(name = "roles")
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-
 public class Role implements GrantedAuthority {
 
     @Id
-    @Column(name = "id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(unique = true)
+    private int id;
+    @Column(nullable = false)
     private String name;
+
     @ManyToMany(mappedBy = "roles")
-    private Set<User> users;
+    private Collection<User> users;
+
+    public Role(String name) {
+        this.name = name;
+    }
+
+    public Role() {
+    }
 
     @Override
     public String getAuthority() {
-
-        return getRole();
+        return name;
     }
 
-    public String getRole() {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return name;
+        return this.name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return String.valueOf(id).equals(role.id) && name.equals(role.name);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + id;
+        return result;
     }
 }
