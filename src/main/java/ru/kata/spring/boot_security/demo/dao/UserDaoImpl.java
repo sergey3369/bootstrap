@@ -3,27 +3,24 @@ package ru.kata.spring.boot_security.demo.dao;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
 public class UserDaoImpl implements UserDao {
+
+    @PersistenceContext
     private EntityManager entityManager;
-
-    @Autowired
-    public void setEntityManager(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
-
-    private Session session;
 
     @Override
     public void saveUser(User user) {
-        session = entityManager.unwrap(Session.class);
-        session.save(user);
+        entityManager.persist(user);
     }
 
     @Override
@@ -33,29 +30,36 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User findUser(Long id) {
-        session = entityManager.unwrap(Session.class);
-        return session.find(User.class, id);
+        Query query = entityManager.
+                createQuery("SELECT u FROM User u where u.id =:id");
+        query.setParameter("id", id);
+        User user = (User) query.getSingleResult();
+        return user;
     }
 
     @Override
     public User findUserByName(String email) {
-        session = entityManager.unwrap(Session.class);
-        TypedQuery<User> query = session.createQuery("FROM User u where u.email = :email");
+        Query query = entityManager.
+                createQuery("SELECT u FROM User u where u.email =:email");
         query.setParameter("email", email);
-        return query.getSingleResult();
+        User user = (User) query.getSingleResult();
+        return user;
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public List<User> listUsers() {
-        session = entityManager.unwrap(Session.class);
-        return (List<User>) session.createQuery("SELECT u FROM User u").getResultList();
+        Query query = entityManager.
+                createQuery("SELECT e FROM User e");
+        List<User> list = query.getResultList();
+        return list;
     }
 
     @Override
     public void deleteUser(Long id) {
-        session = entityManager.unwrap(Session.class);
-        User user = session.find(User.class, id);
-        session.remove(user);
+        Query query = entityManager.
+                createQuery("delete from User u where u.id = :id");
+        query.setParameter("id", id);
+        query.executeUpdate();
     }
 }

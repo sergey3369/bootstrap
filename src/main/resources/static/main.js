@@ -18,6 +18,7 @@ fetch(URLGetUsersList).then(
                     <th scope="col">Last Name</th>
                     <th scope="col">Age</th>
                     <th scope="col">Email</th>
+                    <th scope="col">Password</th>
                     <th scope="col">Role</th>
                     <th scope="col">Edit</th>
                     <th scope="col">Delete</th>
@@ -32,6 +33,7 @@ fetch(URLGetUsersList).then(
                     <td class="main-surname" id="main-surname-${user.id}">${user.surname}</td>
                     <td class="main-age" id="main-age-${user.id}">${user.age}</td>
                     <td class="main-email" id="main-email-${user.id}">${user.email}</td>
+                    <td class="main-password" id="main-password-${user.id}">${user.password}</td>
                     <td class="main-roles" id="main-roles-${user.id}">`
 
                         user.roles.forEach(val => {
@@ -82,6 +84,7 @@ userList.addEventListener('click', (e) => {
     let editSurname = parent.querySelector('.main-surname').textContent
     let editAge = parent.querySelector('.main-age').textContent
     let editEmail = parent.querySelector('.main-email').textContent
+    let editPassword = parent.querySelector('.main-password').textContent
     let editRoles = parent.querySelector('.main-roles').textContent
     deleteId = e.target.parentElement.parentElement.dataset.id
     editId = e.target.parentElement.parentElement.dataset.id
@@ -105,6 +108,7 @@ userList.addEventListener('click', (e) => {
         document.getElementById('surnameEdit').value = editSurname;
         document.getElementById('ageEdit').value = editAge;
         document.getElementById('emailEdit').value = editEmail;
+        document.getElementById('passwordEdit').value = editPassword;
         document.getElementById('rolesEdit').value = editRoles;
         const select = document.getElementById('rolesEdit').getElementsByTagName('option');
         let rolesForUser = 0;
@@ -173,6 +177,7 @@ function watchModalEdit(e) {
                                 <td class="main-surname" id="main-surname-${data.id}">${data.surname}</td>
                                 <td class="main-age" id="main-age-${data.id}">${data.age}</td>
                                 <td class="main-email" id="main-email-${data.id}">${data.email}</td>
+                                <td class="main-password" id="main-password-${data.id}">${data.password}</td>
                                 <td class="main-roles" id="main-roles-${data.id}">`
 
                         data.roles.forEach(val => {
